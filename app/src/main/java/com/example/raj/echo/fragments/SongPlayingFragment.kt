@@ -47,7 +47,8 @@ class SongPlayingFragment : Fragment() {
             _songTitle = arguments.getString("songTitle")
             _songArtist = arguments.getString("songArtist")
             _sondID = arguments.getInt("songID").toLong()
-    }catch(e : Exception){
+    }
+        catch(e : Exception){
         e.printStackTrace()
         }
         mediaPlayer = MediaPlayer()
