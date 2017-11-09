@@ -14,7 +14,10 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.SeekBar
 import android.widget.TextView
+import com.example.raj.echo.CurrentSongHelper
 import com.example.raj.echo.R
+import com.example.raj.echo.Songs
+import java.util.*
 
 
 /**
@@ -33,6 +36,11 @@ class SongPlayingFragment : Fragment() {
     var songArtistView: TextView?=null
     var shuffleImageButton: ImageButton?=null
     var songTitleView: TextView?=null
+
+    var currentSongHelper: CurrentSongHelper?=null
+    var currentPosition: Int= 0
+    var fetchSongs: ArrayList<Songs>?=null
+
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -63,6 +71,10 @@ class SongPlayingFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        currentSongHelper?.isPlaying = true
+        currentSongHelper?.isLoop =false
+        currentSongHelper?.isShuffle = false
+         currentSongHelper = CurrentSongHelper()
         var path: String?= null
         var _songTitle: String?=null
         var _songArtist: String?=null
@@ -72,6 +84,13 @@ class SongPlayingFragment : Fragment() {
             _songTitle = arguments.getString("songTitle")
             _songArtist = arguments.getString("songArtist")
             _sondID = arguments.getInt("songID").toLong()
+            currentPosition = arguments.getInt("songPosition")
+            fetchSongs = arguments.getParcelableArrayList("songData")
+
+            currentSongHelper?.songPath =path
+            currentSongHelper?.songTitle =_songTitle
+            currentSongHelper?.songArtist = _songArtist
+            currentSongHelper?.songId =_sondID
     }
         catch(e : Exception){
         e.printStackTrace()
@@ -86,6 +105,15 @@ class SongPlayingFragment : Fragment() {
             e.printStackTrace()
         }
         mediaPlayer?.start()
+        if(currentSongHelper?.isPlaying as Boolean){
+            playpauseImageButton?.setBackgroundResource(R.drawable.play_icon)
+            currentSongHelper?.isPlaying = false
+            mediaPlayer?.pause()
+        }else{
+            playpauseImageButton?.setBackgroundResource(R.drawable.pause_icon)
+            currentSongHelper?.isPlaying =true
+            mediaPlayer?.start()
+        }
     }
     fun onClickHandler(){
         shuffleImageButton?.setOnClickListener({})
@@ -103,5 +131,35 @@ class SongPlayingFragment : Fragment() {
         loopImageButton?.setOnClickListener({})
 
     }
+    fun playNext(check : String){
+        if(check.equals("PlayNextNormal",ignoreCase = true)){
+            currentPosition = currentPosition + 1
+        }else{
+            if(check.equals("PlayNextLikeNormalShuffle",ignoreCase = true)) {
+                var randomObject = Random()
+                var randomPosition = randomObject.nextInt(fetchSongs?.size?.plus(1) as Int)
+                currentPosition = randomPosition
+
+            }
+            if(currentPosition == fetchSongs?.size){
+                currentPosition= 0
+            }
+                var nextSong = fetchSongs?.get(currentPosition)
+                currentSongHelper?.songPath =nextSong?.songData
+                currentSongHelper?.songTitle =nextSong?.songTitle
+                currentSongHelper?.currentPosition = currentPosition
+                currentSongHelper?.songId = nextSong?.songID as Long
+            mediaPlayer?.reset()
+            try{
+                mediaPlayer?.setDataSource(myActivity,Uri.parse(currentSongHelper?.songPath))
+                mediaPlayer?.prepare()
+                mediaPlayer?.start()
+            }
+            catch (e: Exception){
+                e.printStackTrace()
+            }
+            }
+            }
+
 
 }// Required empty public constructor
