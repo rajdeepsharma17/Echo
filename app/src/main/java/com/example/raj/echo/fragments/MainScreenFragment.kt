@@ -6,6 +6,8 @@ import android.content.Context
 import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v4.app.Fragment
+import android.support.v7.widget.DefaultItemAnimator
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +17,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import com.example.raj.echo.R
 import com.example.raj.echo.Songs
+import com.example.raj.echo.adapters.MainScreenAdapter
 
 
 /**
@@ -22,6 +25,7 @@ import com.example.raj.echo.Songs
  */
 class MainScreenFragment : Fragment() {
 
+    var getSongsList: ArrayList<Songs>? = null
     var nowPlayingBottomBar: RelativeLayout? = null
     var playPauseButton: ImageButton? = null
     var songTitle: TextView? = null
@@ -29,6 +33,7 @@ class MainScreenFragment : Fragment() {
     var noSongs: RelativeLayout? = null
     var recyclerView: RecyclerView? = null
     var myActivity: Activity?= null
+    var _mainScreenAdapter: MainScreenAdapter?= null
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -43,6 +48,17 @@ class MainScreenFragment : Fragment() {
         recyclerView = view?.findViewById<RecyclerView>(R.id.contentMain)
 
         return view
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        getSongsList = getSongsFromPhone()
+        _mainScreenAdapter = MainScreenAdapter(getSongsList as ArrayList<Songs>, myActivity as Context)
+        val mLayoutManager = LinearLayoutManager(myActivity)
+        recyclerView?.layoutManager = mLayoutManager
+        recyclerView?.itemAnimator = DefaultItemAnimator()
+        recyclerView?.adapter = _mainScreenAdapter
     }
 
     override fun onAttach(context: Context?) {
