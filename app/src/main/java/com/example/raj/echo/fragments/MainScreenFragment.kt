@@ -4,6 +4,7 @@ package com.example.raj.echo.fragments
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
+import android.provider.MediaStore
 import android.support.v4.app.Fragment
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.example.raj.echo.R
+import com.example.raj.echo.Songs
 
 
 /**
@@ -53,7 +55,28 @@ class MainScreenFragment : Fragment() {
         myActivity = activity
     }
 
-    fun getSongsFromPhone(){
+    fun getSongsFromPhone(): ArrayList<Songs>{
+        var arrayList  = ArrayList<Songs>()
+        var contentResolver = myActivity?.contentResolver
+        var songURI = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+        var songCursor = contentResolver?.query(songURI,null,null,null,null)
+        if(songCursor!=null && songCursor.moveToFirst()){
+            val songID = songCursor.getColumnIndex(MediaStore.Audio.Media._ID)
+            val songTiltle = songCursor.getColumnIndex(MediaStore.Audio.Media.TITLE)
+            val songArtist = songCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST)
+            val songData = songCursor.getColumnIndex(MediaStore.Audio.Media.DATA)
+            val dateIndex = songCursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED)
+            while(songCursor.moveToNext()){
+                var currentId = songCursor.getLong(songID)
+                var currentTitle = songCursor.getString(songTiltle)
+                var currentArtist = songCursor.getString(songArtist)
+                var currentData = songCursor.getString(songData)
+                var currentDate = songCursor.getLong(dateIndex)
+                arrayList.add(Songs(currentId, currentTitle, currentArtist,currentData,currentDate))
+
+            }
+        }
+        return arrayList 
 
     }
 
