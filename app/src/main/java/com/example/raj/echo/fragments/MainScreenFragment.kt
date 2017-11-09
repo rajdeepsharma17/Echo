@@ -76,7 +76,7 @@ class MainScreenFragment : Fragment() {
 
             }
         }
-        return arrayList 
+        return arrayList
 
     }
 
