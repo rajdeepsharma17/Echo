@@ -117,8 +117,22 @@ class SongPlayingFragment : Fragment() {
     }
     fun onClickHandler(){
         shuffleImageButton?.setOnClickListener({})
-        nextImageButton?.setOnClickListener({})
-        previousImageButton?.setOnClickListener({})
+        nextImageButton?.setOnClickListener({
+            currentSongHelper?.isPlaying = true
+            if(currentSongHelper?.isShuffle as Boolean){
+                playNext("PlayNextLikeNormalShuffle")
+            }else {
+                playNext("PlayNextNormal")
+            }
+        })
+        previousImageButton?.setOnClickListener({
+            currentSongHelper?.isPlaying = true
+            if(currentSongHelper?.isLoop as Boolean){
+                loopImageButton?.setBackgroundResource(R.drawable.loop_white_icon)
+            }
+            playPrevious()
+
+        })
         playpauseImageButton?.setOnClickListener({
             if(mediaPlayer?.isPlaying as Boolean){
                 mediaPlayer?.pause()
@@ -128,7 +142,17 @@ class SongPlayingFragment : Fragment() {
                 playpauseImageButton?.setBackgroundResource(R.drawable.pause_icon)
             }
         })
-        loopImageButton?.setOnClickListener({})
+        loopImageButton?.setOnClickListener({
+            if(currentSongHelper?.isLoop as Boolean){
+                currentSongHelper?.isLoop = false
+                loopImageButton?.setBackgroundResource(R.drawable.loop_white_icon)
+            }else{
+                currentSongHelper?.isLoop = true
+                currentSongHelper?.isShuffle = false
+                loopImageButton?.setBackgroundResource(R.drawable.loop_icon)
+                shuffleImageButton?.setBackgroundResource(R.drawable.loop_white_icon)
+            }
+        })
 
     }
     fun playNext(check : String){
@@ -144,6 +168,7 @@ class SongPlayingFragment : Fragment() {
             if(currentPosition == fetchSongs?.size){
                 currentPosition= 0
             }
+                currentSongHelper?.isLoop = false
                 var nextSong = fetchSongs?.get(currentPosition)
                 currentSongHelper?.songPath =nextSong?.songData
                 currentSongHelper?.songTitle =nextSong?.songTitle
@@ -160,6 +185,34 @@ class SongPlayingFragment : Fragment() {
             }
             }
             }
+    fun playPrevious(){
+        currentPosition = currentPosition-1
+        if(currentPosition==-1){
+            currentPosition=0
+        }
+        if(currentSongHelper?.isPlaying as Boolean){
+            playpauseImageButton?.setBackgroundResource(R.drawable.pause_icon)
+        }else{
+            playpauseImageButton?.setBackgroundResource(R.drawable.play_icon)
+        }
+        currentSongHelper?.isLoop = false
+        val nextSong = fetchSongs?.get(currentPosition)
+        currentSongHelper?.songTitle = nextSong?.songTitle
+        currentSongHelper?.songPath = nextSong?.songData
+        currentSongHelper?.currentPosition = currentPosition
+        currentSongHelper?.songId = nextSong?.songID as Long
+
+        mediaPlayer?.reset()
+        try{
+            mediaPlayer?.setDataSource(activity, Uri.parse(currentSongHelper?.songPath))
+            mediaPlayer?.prepare()
+            mediaPlayer?.start()
+        }catch (e: Exception){
+            e.printStackTrace()
+        }
+
+
+    }
 
 
 }// Required empty public constructor
