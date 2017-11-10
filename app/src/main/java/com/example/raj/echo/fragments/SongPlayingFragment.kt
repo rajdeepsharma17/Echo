@@ -7,6 +7,7 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +19,7 @@ import com.example.raj.echo.CurrentSongHelper
 import com.example.raj.echo.R
 import com.example.raj.echo.Songs
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 /**
@@ -40,6 +42,19 @@ class SongPlayingFragment : Fragment() {
     var currentSongHelper: CurrentSongHelper?=null
     var currentPosition: Int= 0
     var fetchSongs: ArrayList<Songs>?=null
+
+    var updateSongs = object : Runnable{
+        override fun run() {
+            var getCurrent = mediaPlayer?.currentPosition
+            startTimeNext?.setText(String.format("%d:%d",
+                    TimeUnit.MILLISECONDS.toMinutes(getCurrent?.toLong() as Long),
+                    TimeUnit.MILLISECONDS.toSeconds(getCurrent?.toLong() as Long)-
+                            TimeUnit.MILLISECONDS.toSeconds(TimeUnit.MILLISECONDS.toMinutes(getCurrent?.toLong()as Long))))
+            Handler().postDelayed(this,1000)
+
+        }
+
+    }
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -272,6 +287,21 @@ class SongPlayingFragment : Fragment() {
     fun updateTextView(songtitle : String, songArtist: String){
         songTitleView?.setText(songtitle)
         songArtistView?.setText(songArtist)
+    }
+    fun processInformation(mediaPlayer: MediaPlayer){
+        val finaltime = mediaPlayer.duration
+        val starttime = mediaPlayer.currentPosition
+        startTimeNext?.setText(String.format("%d:%d",
+                TimeUnit.MILLISECONDS.toMinutes(starttime?.toLong() as Long),
+                TimeUnit.MILLISECONDS.toSeconds(starttime?.toLong() as Long)-
+                        TimeUnit.MILLISECONDS.toSeconds(TimeUnit.MILLISECONDS.toMinutes(starttime?.toLong()as Long))))
+        endTimeNext?.setText(String.format("%d:%d",
+                TimeUnit.MILLISECONDS.toMinutes(finaltime?.toLong() as Long),
+                TimeUnit.MILLISECONDS.toSeconds(finaltime?.toLong() as Long)-
+                        TimeUnit.MILLISECONDS.toSeconds(TimeUnit.MILLISECONDS.toMinutes(finaltime?.toLong()as Long))))
+    seekbar?.setProgress(starttime)
+        Handler().postDelayed(updateSongs,1000)
+
     }
 
 
