@@ -91,6 +91,8 @@ class SongPlayingFragment : Fragment() {
             currentSongHelper?.songTitle =_songTitle
             currentSongHelper?.songArtist = _songArtist
             currentSongHelper?.songId =_sondID
+
+            updateTextView(currentSongHelper?.songTitle as String, currentSongHelper?.songArtist as String)
     }
         catch(e : Exception){
         e.printStackTrace()
@@ -189,6 +191,10 @@ class SongPlayingFragment : Fragment() {
                 currentSongHelper?.songTitle =nextSong?.songTitle
                 currentSongHelper?.currentPosition = currentPosition
                 currentSongHelper?.songId = nextSong?.songID as Long
+
+            updateTextView(currentSongHelper?.songTitle as String, currentSongHelper?.songArtist as String)
+
+
             mediaPlayer?.reset()
             try{
                 mediaPlayer?.setDataSource(myActivity,Uri.parse(currentSongHelper?.songPath))
@@ -217,6 +223,9 @@ class SongPlayingFragment : Fragment() {
         currentSongHelper?.currentPosition = currentPosition
         currentSongHelper?.songId = nextSong?.songID as Long
 
+        updateTextView(currentSongHelper?.songTitle as String, currentSongHelper?.songArtist as String)
+
+
         mediaPlayer?.reset()
         try{
             mediaPlayer?.setDataSource(activity, Uri.parse(currentSongHelper?.songPath))
@@ -242,6 +251,9 @@ class SongPlayingFragment : Fragment() {
                 currentSongHelper?.currentPosition = currentPosition
                 currentSongHelper?.songId = nextSong?.songID as Long
 
+                updateTextView(currentSongHelper?.songTitle as String, currentSongHelper?.songArtist as String)
+
+
                 mediaPlayer?.reset()
                 try {
                     mediaPlayer?.setDataSource(myActivity,Uri.parse(currentSongHelper?.songPath))
@@ -256,6 +268,10 @@ class SongPlayingFragment : Fragment() {
                 currentSongHelper?.isPlaying = true
             }
         }
+    }
+    fun updateTextView(songtitle : String, songArtist: String){
+        songTitleView?.setText(songtitle)
+        songArtistView?.setText(songArtist)
     }
 
 
