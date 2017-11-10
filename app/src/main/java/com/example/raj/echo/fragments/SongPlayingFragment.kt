@@ -91,6 +91,8 @@ class SongPlayingFragment : Fragment() {
             currentSongHelper?.songTitle =_songTitle
             currentSongHelper?.songArtist = _songArtist
             currentSongHelper?.songId =_sondID
+
+            updateTextView(currentSongHelper?.songTitle as String, currentSongHelper?.songArtist as String)
     }
         catch(e : Exception){
         e.printStackTrace()
@@ -114,9 +116,24 @@ class SongPlayingFragment : Fragment() {
             currentSongHelper?.isPlaying =true
             mediaPlayer?.start()
         }
+        mediaPlayer?.setOnCompletionListener {
+            onSongComplete()
+        }
+        onClickHandler()
     }
     fun onClickHandler(){
-        shuffleImageButton?.setOnClickListener({})
+        shuffleImageButton?.setOnClickListener({
+            if(currentSongHelper?.isShuffle as Boolean){
+                shuffleImageButton?.setBackgroundResource(R.drawable.shuffle_white_icon)
+                currentSongHelper?.isShuffle = false
+            }else{
+                currentSongHelper?.isShuffle = true
+                currentSongHelper?.isLoop = false
+                shuffleImageButton?.setBackgroundResource(R.drawable.shuffle_icon)
+                loopImageButton?.setBackgroundResource(R.drawable.loop_white_icon)
+
+            }
+        })
         nextImageButton?.setOnClickListener({
             currentSongHelper?.isPlaying = true
             if(currentSongHelper?.isShuffle as Boolean){
@@ -174,6 +191,10 @@ class SongPlayingFragment : Fragment() {
                 currentSongHelper?.songTitle =nextSong?.songTitle
                 currentSongHelper?.currentPosition = currentPosition
                 currentSongHelper?.songId = nextSong?.songID as Long
+
+            updateTextView(currentSongHelper?.songTitle as String, currentSongHelper?.songArtist as String)
+
+
             mediaPlayer?.reset()
             try{
                 mediaPlayer?.setDataSource(myActivity,Uri.parse(currentSongHelper?.songPath))
@@ -202,6 +223,9 @@ class SongPlayingFragment : Fragment() {
         currentSongHelper?.currentPosition = currentPosition
         currentSongHelper?.songId = nextSong?.songID as Long
 
+        updateTextView(currentSongHelper?.songTitle as String, currentSongHelper?.songArtist as String)
+
+
         mediaPlayer?.reset()
         try{
             mediaPlayer?.setDataSource(activity, Uri.parse(currentSongHelper?.songPath))
@@ -212,6 +236,42 @@ class SongPlayingFragment : Fragment() {
         }
 
 
+    }
+    fun onSongComplete(){
+        if(currentSongHelper?.isShuffle as Boolean) {
+            playNext("PlayNextLikeNormalShuffle")
+            currentSongHelper?.isPlaying = true
+        }else{
+            if(currentSongHelper?.isLoop as Boolean){
+                currentSongHelper?.isPlaying = true
+                var nextSong = fetchSongs?.get(currentPosition)
+
+                currentSongHelper?.songTitle = nextSong?.songTitle
+                currentSongHelper?.songPath = nextSong?.songData
+                currentSongHelper?.currentPosition = currentPosition
+                currentSongHelper?.songId = nextSong?.songID as Long
+
+                updateTextView(currentSongHelper?.songTitle as String, currentSongHelper?.songArtist as String)
+
+
+                mediaPlayer?.reset()
+                try {
+                    mediaPlayer?.setDataSource(myActivity,Uri.parse(currentSongHelper?.songPath))
+                    mediaPlayer?.prepare()
+                    mediaPlayer?.start()
+                }catch (e: Exception){
+                    e.printStackTrace()
+                }
+
+            }else{
+                playNext("PlayNextNormal")
+                currentSongHelper?.isPlaying = true
+            }
+        }
+    }
+    fun updateTextView(songtitle : String, songArtist: String){
+        songTitleView?.setText(songtitle)
+        songArtistView?.setText(songArtist)
     }
 
 
