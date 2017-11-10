@@ -122,6 +122,7 @@ class SongPlayingFragment : Fragment() {
             e.printStackTrace()
         }
         mediaPlayer?.start()
+        processInformation(mediaPlayer as MediaPlayer)
         if(currentSongHelper?.isPlaying as Boolean){
             playpauseImageButton?.setBackgroundResource(R.drawable.play_icon)
             currentSongHelper?.isPlaying = false
@@ -130,6 +131,7 @@ class SongPlayingFragment : Fragment() {
             playpauseImageButton?.setBackgroundResource(R.drawable.pause_icon)
             currentSongHelper?.isPlaying =true
             mediaPlayer?.start()
+
         }
         mediaPlayer?.setOnCompletionListener {
             onSongComplete()
@@ -182,7 +184,7 @@ class SongPlayingFragment : Fragment() {
                 currentSongHelper?.isLoop = true
                 currentSongHelper?.isShuffle = false
                 loopImageButton?.setBackgroundResource(R.drawable.loop_icon)
-                shuffleImageButton?.setBackgroundResource(R.drawable.loop_white_icon)
+                shuffleImageButton?.setBackgroundResource(R.drawable.shuffle_white_icon)
             }
         })
 
@@ -215,6 +217,7 @@ class SongPlayingFragment : Fragment() {
                 mediaPlayer?.setDataSource(myActivity,Uri.parse(currentSongHelper?.songPath))
                 mediaPlayer?.prepare()
                 mediaPlayer?.start()
+                processInformation(mediaPlayer as MediaPlayer)
             }
             catch (e: Exception){
                 e.printStackTrace()
@@ -246,6 +249,7 @@ class SongPlayingFragment : Fragment() {
             mediaPlayer?.setDataSource(activity, Uri.parse(currentSongHelper?.songPath))
             mediaPlayer?.prepare()
             mediaPlayer?.start()
+            processInformation(mediaPlayer as MediaPlayer)
         }catch (e: Exception){
             e.printStackTrace()
         }
@@ -274,6 +278,7 @@ class SongPlayingFragment : Fragment() {
                     mediaPlayer?.setDataSource(myActivity,Uri.parse(currentSongHelper?.songPath))
                     mediaPlayer?.prepare()
                     mediaPlayer?.start()
+                    processInformation(mediaPlayer as MediaPlayer)
                 }catch (e: Exception){
                     e.printStackTrace()
                 }
@@ -291,6 +296,7 @@ class SongPlayingFragment : Fragment() {
     fun processInformation(mediaPlayer: MediaPlayer){
         val finaltime = mediaPlayer.duration
         val starttime = mediaPlayer.currentPosition
+        seekbar?.max = finaltime
         startTimeNext?.setText(String.format("%d:%d",
                 TimeUnit.MILLISECONDS.toMinutes(starttime?.toLong() as Long),
                 TimeUnit.MILLISECONDS.toSeconds(starttime?.toLong() as Long)-
