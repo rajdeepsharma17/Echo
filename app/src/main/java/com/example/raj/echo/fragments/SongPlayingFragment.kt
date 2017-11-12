@@ -230,7 +230,7 @@ class SongPlayingFragment : Fragment() {
         Statified.loopImageButton=view?.findViewById(R.id.loopButton)
         Statified.songArtistView=view?.findViewById(R.id.songArtist)
         Statified.shuffleImageButton=view?.findViewById(R.id.shuffleButton)
-        Statified.songTitleView=view?.findViewById(R.id.songTitle)
+        Statified.songTitleView=view?.findViewById(R.id.songTitleFavScreen)
         Statified.glView=view?.findViewById(R.id.visualizer_view)
         Statified.fab = view?.findViewById(R.id.favoriteIcon)
         Statified.fab?.alpha = 0.8f
