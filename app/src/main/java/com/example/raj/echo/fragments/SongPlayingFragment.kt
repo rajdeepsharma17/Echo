@@ -3,6 +3,10 @@ package com.example.raj.echo.fragments
 
 import android.app.Activity
 import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
@@ -71,6 +75,8 @@ class SongPlayingFragment : Fragment() {
         var shuffleImageButton: ImageButton?=null
         var songTitleView: TextView?=null
 
+        var MY_PREFS_NAME = "ShakeFeature"
+
         var currentSongHelper: CurrentSongHelper?=null
         var currentPosition: Int= 0
         var fetchSongs: ArrayList<Songs>?=null
@@ -80,6 +86,9 @@ class SongPlayingFragment : Fragment() {
 
         var fab:ImageButton?= null
         var favoriteContent: EchoDatabase?=null
+
+        var mSensorManager:SensorManager?=null
+        var mSensorListener:SensorEventListener?=null
 
         var updateSongs = object : Runnable{
             override fun run() {
@@ -202,6 +211,10 @@ class SongPlayingFragment : Fragment() {
 
     }
 
+    var mAcceleration:Float = 0f
+    var mAccelerationCurrent:Float = 0f
+    var mAccelerationLast:Float = 0f
+
 
 
 
@@ -245,11 +258,14 @@ class SongPlayingFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         Statified.audioVisualization?.onResume()
+        Statified.mSensorManager?.registerListener(Statified.mSensorListener,Statified.mSensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+        ,SensorManager.SENSOR_DELAY_NORMAL)
     }
 
     override fun onPause() {
         Statified.audioVisualization?.onPause()
         super.onPause()
+        Statified.mSensorManager?.unregisterListener(Statified.mSensorListener)
     }
 
     override fun onDestroyView() {
@@ -481,6 +497,48 @@ class SongPlayingFragment : Fragment() {
             Statified.fab?.setImageDrawable(ContextCompat.getDrawable(Statified.myActivity,R.drawable.favorite_on))
         }else{
             Statified.fab?.setImageDrawable(ContextCompat.getDrawable(Statified.myActivity,R.drawable.favorite_off))
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    Statified.mSensorManager = Statified.myActivity?.getSystemService(Context.SENSOR_SERVICE)as SensorManager
+
+        mAcceleration = 0.0f
+        mAccelerationLast=SensorManager.GRAVITY_EARTH
+        mAccelerationCurrent=SensorManager.GRAVITY_EARTH
+        bindShakeListener()
+    }
+
+
+    fun bindShakeListener(){
+        Statified.mSensorListener = object : SensorEventListener{
+            override fun onSensorChanged(p0: SensorEvent) {
+                val x = p0.values[0]
+                val y = p0.values[1]
+                val z = p0.values[2]
+
+                mAccelerationLast = mAccelerationCurrent
+                mAccelerationCurrent = Math.sqrt(((x*x + y*y + z*z).toDouble())).toFloat()
+                var delta = mAccelerationCurrent-mAccelerationLast
+                mAcceleration = mAcceleration * 0.9f + delta
+
+                if(mAcceleration > 12){
+                    val prefs= Statified.myActivity?.getSharedPreferences(Statified.MY_PREFS_NAME,Context.MODE_PRIVATE)
+                    val isAllowed = prefs?.getBoolean("feature",false)
+                    if(isAllowed as Boolean){
+
+                        staticated.playNext("PlayNextNormal")
+                    }
+                }
+
+
+
+            }
+
+            override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
+
+            }
         }
     }
 
