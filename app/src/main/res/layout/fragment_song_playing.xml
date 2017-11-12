@@ -54,7 +54,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/songTitle"
+                android:id="@+id/songTitleFavScreen"
                 android:layout_centerHorizontal="true"
                 android:text="Castle of Glass"
                 android:background="#ffffff"
@@ -70,7 +70,7 @@
                 android:layout_centerHorizontal="true"
                 android:text="Linkin Park"
                 android:background="#eeeeee"
-                android:layout_below="@+id/songTitle"
+                android:layout_below="@+id/songTitleFavScreen"
                 android:textStyle="normal"
                 android:textSize="15sp"
                 android:padding="5dp"

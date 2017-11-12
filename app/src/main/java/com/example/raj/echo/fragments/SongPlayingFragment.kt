@@ -219,6 +219,8 @@ class SongPlayingFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         var view = inflater!!.inflate(R.layout.fragment_song_playing, container, false)
+        setHasOptionsMenu(true)
+
         Statified.seekbar=view?.findViewById(R.id.seekBar)
         Statified.startTimeNext=view?.findViewById(R.id.startTime)
         Statified.endTimeNext=view?.findViewById(R.id.endTime)
@@ -401,6 +403,7 @@ class SongPlayingFragment : Fragment() {
         })
         Statified.nextImageButton?.setOnClickListener({
             Statified.currentSongHelper?.isPlaying = true
+            Statified.playpauseImageButton?.setBackgroundResource(R.drawable.pause_icon)
             if(Statified.currentSongHelper?.isShuffle as Boolean){
                 playNext("PlayNextLikeNormalShuffle")
             }else {
@@ -510,6 +513,8 @@ class SongPlayingFragment : Fragment() {
         super.onPrepareOptionsMenu(menu)
         val item: MenuItem? = menu?.findItem(R.id.action_redirect)
         item?.isVisible = true
+        val item2: MenuItem? = menu?.findItem(R.id.action_sort)
+        item2?.isVisible = false
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {

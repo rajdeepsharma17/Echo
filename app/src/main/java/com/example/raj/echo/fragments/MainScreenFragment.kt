@@ -9,15 +9,16 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.example.raj.echo.R
 import com.example.raj.echo.Songs
 import com.example.raj.echo.adapters.MainScreenAdapter
+import com.example.raj.echo.fragments.SongPlayingFragment.Statified.myActivity
+import java.util.*
+import kotlin.system.measureNanoTime
 
 
 /**
@@ -40,6 +41,7 @@ class MainScreenFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view = inflater!!.inflate(R.layout.fragment_main_screen, container, false)
+        setHasOptionsMenu(true)
         visibleLayout = view?.findViewById<RelativeLayout>(R.id.visibleLayout)
         noSongs = view?.findViewById<RelativeLayout>(R.id.noSongs)
         nowPlayingBottomBar = view?.findViewById<RelativeLayout>(R.id.hiddenBarMainScreen)
@@ -50,15 +52,72 @@ class MainScreenFragment : Fragment() {
         return view
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        menu?.clear()
+        inflater?.inflate(R.menu.main,menu)
+        return
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        val switcher = item?.itemId
+        if(switcher==R.id.action_sort_ascending){
+            val editor = myActivity?.getSharedPreferences("action_sort",Context.MODE_PRIVATE)?.edit()
+            editor?.putString("action_sort_ascending", "true")
+            editor?.putString("action_sort_recent", "false")
+            editor?.apply()
+            if(getSongsList != null){
+                Collections.sort(getSongsList,Songs.Statified.nameComparator)
+            }
+            _mainScreenAdapter?.notifyDataSetChanged()
+            return false
+
+        }else if(switcher==R.id.action_sort_recent){
+            val editortwo = myActivity?.getSharedPreferences("action_sort",Context.MODE_PRIVATE)?.edit()
+            editortwo?.putString("action_sort_ascending", "true")
+            editortwo?.putString("action_sort_recent", "false")
+            editortwo?.apply()
+            if(getSongsList != null){
+                Collections.sort(getSongsList,Songs.Statified.dateComparator)
+            }
+            _mainScreenAdapter?.notifyDataSetChanged()
+            return false
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         getSongsList = getSongsFromPhone()
-        _mainScreenAdapter = MainScreenAdapter(getSongsList as ArrayList<Songs>, myActivity as Context)
-        val mLayoutManager = LinearLayoutManager(myActivity)
-        recyclerView?.layoutManager = mLayoutManager
-        recyclerView?.itemAnimator = DefaultItemAnimator()
-        recyclerView?.adapter = _mainScreenAdapter
+        val prefs = activity?.getSharedPreferences("action_sort",Context.MODE_PRIVATE)?.edit()
+        val action_sort_ascending =  prefs?.putString("action_sort_ascending", "true")
+        val action_sort_recent = prefs?.putString("action_sort_recent", "false")
+        if(getSongsList == null){
+            visibleLayout?.visibility = View.INVISIBLE
+            noSongs?.visibility = View.VISIBLE
+        }else {
+
+
+            _mainScreenAdapter = MainScreenAdapter(getSongsList as ArrayList<Songs>, myActivity as Context)
+            val mLayoutManager = LinearLayoutManager(myActivity)
+            recyclerView?.layoutManager = mLayoutManager
+            recyclerView?.itemAnimator = DefaultItemAnimator()
+            recyclerView?.adapter = _mainScreenAdapter
+        }
+
+        if(getSongsList != null){
+            if(action_sort_ascending !!. equals("true")){
+                Collections.sort(getSongsList,Songs.Statified.nameComparator)
+                _mainScreenAdapter?.notifyDataSetChanged()
+
+            }else if(action_sort_recent !!. equals("true")){
+                Collections.sort(getSongsList,Songs.Statified.dateComparator)
+                _mainScreenAdapter?.notifyDataSetChanged()
+            }
+        }
+
+
     }
 
     override fun onAttach(context: Context?) {

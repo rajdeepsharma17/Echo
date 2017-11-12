@@ -54,8 +54,8 @@ class FavoriteFragment : Fragment() {
        val view = inflater!!.inflate(R.layout.fragment_favorite, container, false)
         noFavorites = view?.findViewById(R.id.noFavorites)
         nowPlayingBottomBar = view?.findViewById(R.id.hiddenBarFavMainScreen)
-        playPauseButton = view?.findViewById(R.id.playPauseButton)
-        songTitle = view?.findViewById(R.id.songTitle)
+        playPauseButton = view?.findViewById(R.id.playPauseButtonFavScreen)
+        songTitle = view?.findViewById(R.id.songTitleFavScreen)
         recyclerView = view?.findViewById(R.id.favoriteRecycler)
         return view
     }
