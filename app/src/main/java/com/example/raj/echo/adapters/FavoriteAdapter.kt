@@ -1,6 +1,5 @@
 package com.example.raj.echo.adapters
 
-import android.app.Fragment
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
@@ -10,17 +9,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
-import android.widget.Toast
 import com.example.raj.echo.R
 import com.example.raj.echo.Songs
-import com.example.raj.echo.activities.MainActivity
-import com.example.raj.echo.fragments.MainScreenFragment
 import com.example.raj.echo.fragments.SongPlayingFragment
 
 /**
- * Created by Raj on 11/9/2017.
+ * Created by Srishty on 11/11/2017.
  */
-class MainScreenAdapter(_songsDetails: ArrayList<Songs>, context: Context) : RecyclerView.Adapter<MainScreenAdapter.MyViewHolder>() {
+class FavoriteAdapter(_songsDetails: ArrayList<Songs>, context: Context) : RecyclerView.Adapter<FavoriteAdapter.MyViewHolder>() {
 
     var songDetails: ArrayList<Songs>? = null
     var mContext: Context? = null
@@ -48,9 +44,9 @@ class MainScreenAdapter(_songsDetails: ArrayList<Songs>, context: Context) : Rec
             (mContext as FragmentActivity).supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.details_fragment, songPlayingFragment)
-                    .addToBackStack("SongPlayingFragment")
-                    .commit()
-        })
+                    .addToBackStack("SongPlayingFragmentFavorite")
+
+                    .commit()        })
 
 
     }
