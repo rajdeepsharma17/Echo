@@ -93,5 +93,19 @@ class EchoDatabase:SQLiteOpenHelper{
         db.close()
 
     }
+    fun checkSize():Int{
+        var counter = 0
+        var db = this.readableDatabase
+        val query_params = "SELECT * FROM " + staticated.TABLE_NAME
+        val cSor = db.rawQuery(query_params,null)
+        if(cSor.moveToFirst()){
+            do{
+                counter=counter+1
+            }while(cSor.moveToNext())
+        }else{
+            return 0
+        }
+        return counter
+    }
 
 }

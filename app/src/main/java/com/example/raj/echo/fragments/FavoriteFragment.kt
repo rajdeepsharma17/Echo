@@ -18,9 +18,11 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.TextView
+import com.example.raj.echo.Databases.EchoDatabase
 import com.example.raj.echo.R
 import com.example.raj.echo.Songs
 import com.example.raj.echo.adapters.FavoriteAdapter
+import com.example.raj.echo.fragments.SongPlayingFragment.Statified.favoriteContent
 import kotlinx.android.synthetic.main.fragment_favorite.*
 
 
@@ -30,13 +32,18 @@ import kotlinx.android.synthetic.main.fragment_favorite.*
 class FavoriteFragment : Fragment() {
 
     var myActivity: Activity?=null
-    var getSongList: ArrayList<Songs>?=null
+
     var noFavorites:TextView?=null
     var nowPlayingBottomBar:RelativeLayout?=null
     var playPauseButton:ImageButton?=null
     var songTitle:TextView?=null
     var recyclerView:RecyclerView?=null
     var trackPosition:Int=0
+
+    var refreshList:ArrayList<Songs>?=null
+    var getListFromDatabase:ArrayList<Songs>?=null
+
+    var favoriteContent:EchoDatabase?=null
     object Statified{
         var mediaPlayer:MediaPlayer?=null
     }
@@ -69,18 +76,10 @@ class FavoriteFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        getSongList = getSongsFromPhone()
-        if(getSongList==null){
-            recyclerView?.visibility=View.INVISIBLE
-            noFavorites?.visibility= View.VISIBLE
-        }else{
-            var favoriteAdapter=FavoriteAdapter(getSongList as ArrayList<Songs>,myActivity as Context)
-            val mLayoutManager=LinearLayoutManager(activity)
-            recyclerView?.layoutManager=mLayoutManager
-            recyclerView?.itemAnimator= DefaultItemAnimator()
-            recyclerView?.adapter= favoriteAdapter
-            recyclerView?.setHasFixedSize(true)
-        }
+        favoriteContent= EchoDatabase(myActivity)
+        display_favorites_by_searching()
+        bottomBarSetup()
+
     }
 
     override fun onResume() {
@@ -141,6 +140,7 @@ class FavoriteFragment : Fragment() {
             args.putInt("songID",SongPlayingFragment.Statified.currentSongHelper?.songId as Int)
             args.putInt("songPosition", SongPlayingFragment.Statified.currentSongHelper?.currentPosition?.toInt() as Int)
             args.putParcelableArrayList("songData",SongPlayingFragment.Statified.fetchSongs)
+            args.putString("FavBottomBar","Success")
             songPlayingFragment.arguments = args
 
             fragmentManager.beginTransaction()
@@ -160,6 +160,41 @@ class FavoriteFragment : Fragment() {
             }
 
         })
+    }
+    fun display_favorites_by_searching(){
+        if(favoriteContent?.checkSize() as Int >0){
+            refreshList= ArrayList<Songs>()
+            getListFromDatabase = favoriteContent?.queryDBList()
+            var fetchListfromDevice = getSongsFromPhone()
+            if(fetchListfromDevice != null){
+                for (i in 0..fetchListfromDevice?.size-1){
+                    for (j in 0..getListFromDatabase?.size as Int - 1){
+                        if((getListFromDatabase?.get(j)?.songID)==(fetchListfromDevice?.get(i)?.songID)){
+                            refreshList?.add((getListFromDatabase as ArrayList<Songs>)[j])
+                        }
+
+                    }
+                }
+            }else{
+
+            }
+            if(refreshList==null){
+                recyclerView?.visibility=View.INVISIBLE
+                noFavorites?.visibility= View.VISIBLE
+            }else{
+                var favoriteAdapter=FavoriteAdapter(refreshList as ArrayList<Songs>,myActivity as Context)
+                val mLayoutManager=LinearLayoutManager(activity)
+                recyclerView?.layoutManager=mLayoutManager
+                recyclerView?.itemAnimator= DefaultItemAnimator()
+                recyclerView?.adapter= favoriteAdapter
+                recyclerView?.setHasFixedSize(true)
+            }
+
+        }else{
+            recyclerView?.visibility=View.INVISIBLE
+            noFavorites?.visibility= View.VISIBLE
+        }
+
     }
 
 }// Required empty public constructor

@@ -286,6 +286,12 @@ class SongPlayingFragment : Fragment() {
         catch(e : Exception){
         e.printStackTrace()
         }
+
+        var fromFavoriteBottomBar= arguments.get("FavBottomBar") as? String
+        if(fromFavoriteBottomBar != null){
+            Statified.mediaPlayer=FavoriteFragment.Statified.mediaPlayer
+        }else{
+
         Statified.mediaPlayer = MediaPlayer()
         Statified.mediaPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC)
         try{
@@ -306,7 +312,7 @@ class SongPlayingFragment : Fragment() {
             Statified.currentSongHelper?.isPlaying =true
             Statified.mediaPlayer?.start()
 
-        }
+        }}
         Statified.mediaPlayer?.setOnCompletionListener {
             onSongComplete()
         }
