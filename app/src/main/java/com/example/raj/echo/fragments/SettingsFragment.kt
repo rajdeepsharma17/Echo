@@ -29,6 +29,8 @@ class SettingsFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
        var view = inflater!!.inflate(R.layout.fragment_settings, container, false)
         shakeSwitch=view?.findViewById(R.id.switchShake)
+        setHasOptionsMenu(true)
+        activity.title = "Settings"
         // Inflate the layout for this fragment
         return view
     }
@@ -71,6 +73,8 @@ class SettingsFragment : Fragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu?) {
         super.onPrepareOptionsMenu(menu)
+        val item = menu?.findItem(R.id.action_sort)
+        item?.isVisible= false
     }
 
 }// Required empty public constructor

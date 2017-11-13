@@ -147,8 +147,18 @@ class SongPlayingFragment : Fragment() {
             }
         }
         fun updateTextView(songtitle : String, songArtist: String){
-            Statified.songTitleView?.setText(songtitle)
-            Statified.songArtistView?.setText(songArtist)
+
+            var songTitleUpdated = songtitle
+            if(songtitle.equals("<unknown>")){
+                songTitleUpdated = "unknown"
+            }
+            var songArtistUpdated = songArtist
+            if(songArtist.equals("<unknown>")){
+                songArtistUpdated = "unknown"
+            }
+
+            Statified.songTitleView?.setText(songTitleUpdated)
+            Statified.songArtistView?.setText(songArtistUpdated)
         }
         fun processInformation(mediaPlayer: MediaPlayer){
             val finaltime = mediaPlayer.duration
@@ -222,6 +232,7 @@ class SongPlayingFragment : Fragment() {
         setHasOptionsMenu(true)
 
         Statified.seekbar=view?.findViewById(R.id.seekBar)
+        activity.title = "Now Playing"
         Statified.startTimeNext=view?.findViewById(R.id.startTime)
         Statified.endTimeNext=view?.findViewById(R.id.endTime)
         Statified.playpauseImageButton=view?.findViewById(R.id.playPauseButton)
