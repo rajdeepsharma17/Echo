@@ -17,6 +17,7 @@ class AboutUsFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+        activity.title = "About the Developer"
         // Inflate the layout for this fragment
         return inflater!!.inflate(R.layout.fragment_about_us, container, false)
     }
