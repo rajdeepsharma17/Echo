@@ -1,4 +1,4 @@
-# Echo2
+# Echo
 
 This app is a music player with the following functionalities:
 1. A Splash screen (gradient background and app logo in center)
