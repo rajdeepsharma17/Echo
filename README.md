@@ -1,6 +1,6 @@
 # Echo
 
-This app is a music player with the following functionalities:
+<strong>This app is a music player with the following functionalities: </strong>
 1. A Splash screen (gradient background and app logo in center)
 ![Splash](https://github.com/rajdeepsharma17/Echo/blob/master/assets/splash.jpg)
 2. A Navigation drawer with app logo section at the top along with links to ‘All Songs’,
@@ -11,12 +11,17 @@ displayed and user can sort the tracks by name or recently added). This will the
 home screen of the app.
 ![All Songs](https://github.com/rajdeepsharma17/Echo/blob/master/assets/allSongs.jpg)
 4. The app should be able to fetch and play .mp3 and .wav files.
+
+
 5. A ‘Favorites’ screen (where list of all the favorite songs are displayed)
 ![Favorite](https://github.com/rajdeepsharma17/Echo/blob/master/assets/favorites.jpg)
 6. A ‘Settings’ screen (where the ‘Shake to change song’ feature can be enabled or
 disabled)
+![Settings](https://github.com/rajdeepsharma17/Echo/blob/master/assets/settings.jpg)
 7. An ‘About us’ screen (where we will display information about the app developer and
 the app version)
+
+
 8. A ‘Now playing’ screen with following features:
     <ul>
       <li> Track title and track artist
@@ -40,6 +45,8 @@ songs’ screen or ‘Favorites’ screen without pausing the track.
 ![Playing Bar](https://github.com/rajdeepsharma17/Echo/blob/master/assets/playingBar.jpg)
 10. Background play. The app will continue playing the track if the app gets closed (not
 killed) without the music being paused.
+
+
 11. A notification saying "A track is playing in the background" only if the app gets closed
 (not killed) without the music being paused.
 ![Notification](https://github.com/rajdeepsharma17/Echo/blob/master/assets/notification.jpg)
