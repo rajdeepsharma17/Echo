@@ -39,15 +39,23 @@ the app version)
     </ul>
 
 ![Now Playing](https://github.com/rajdeepsharma17/Echo/blob/master/assets/playing.jpg)
+
+
 9. A ‘Now playing’ bar at the bottom with name of the track playing and play or pause
 feature. This would appear if the user has moved from ‘Now playing’ screen to ‘All
 songs’ screen or ‘Favorites’ screen without pausing the track.
+
+
 ![Playing Bar](https://github.com/rajdeepsharma17/Echo/blob/master/assets/playingBar.jpg)
+
+
 10. Background play. The app will continue playing the track if the app gets closed (not
 killed) without the music being paused.
 
 
 11. A notification saying "A track is playing in the background" only if the app gets closed
 (not killed) without the music being paused.
+
+
 ![Notification](https://github.com/rajdeepsharma17/Echo/blob/master/assets/notification.jpg)
 
