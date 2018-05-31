@@ -18,40 +18,20 @@ disabled)
 7. An ‘About us’ screen (where we will display information about the app developer and
 the app version)
 8. A ‘Now playing’ screen with following features:
-
-
-a. Track title and track artist
-
-
-b. Play / Pause button
-
-
-c. Next button
-
-
-d. Previous button
-
-
-e. Shuffle button
-
-
-f. Loop button
-
-
-g. Seek bar
-
-
-h. Mark track as favorite or unfavorite it
-
-
-i. Third party visualiser in upper half background
-
-
-j. A ‘Back to list’ button in the header which should take the user to the screen
-he came from (kind of like back button behaviour).
-
-
-k. Shake to change song
+    <ul>
+      <li> Track title and track artist
+      <li> Play / Pause button
+      <li> Next button
+      <li> Previous button
+      <li> Shuffle button
+      <li> Loop button
+      <li> Seek bar
+      <li> Mark track as favorite or unfavorite it
+      <li> Third party visualiser in upper half background
+      <li> A ‘Back to list’ button in the header which should take the user to the screen
+      he came from (kind of like back button behaviour).
+      <li> Shake to change song
+    </ul>
 
 ![Now Playing](https://github.com/rajdeepsharma17/Echo/blob/master/assets/playing.jpg)
 9. A ‘Now playing’ bar at the bottom with name of the track playing and play or pause
